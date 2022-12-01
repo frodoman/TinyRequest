@@ -21,8 +21,8 @@ public protocol TinyRequestProtocol: AnyObject {
 public class TinyRequest: TinyRequestProtocol {
     
     private var request: URLRequest
-    private let session: URLSession
-    private let decoder: JSONDecoder
+    private var session: URLSession
+    private var decoder: JSONDecoder
     
     public required convenience init(url: URL) {
         self.init(request: URLRequest(url: url),
