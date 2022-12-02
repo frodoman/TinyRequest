@@ -7,8 +7,7 @@ final class TinyRequestTests: XCTestCase {
     var cancllables: [AnyCancellable] = []
     
     func testExample() throws {
-        //let bundle = Bundle(for: TinyRequestTests.self)
-              
+        
         guard let url = Bundle.module.url(forResource: "people", withExtension: "json") else {
             throw TestError.fileNotFound("people.json")
         }

@@ -9,10 +9,10 @@ public protocol TinyRequestProtocol: AnyObject {
     func set(method: String) -> TinyRequestProtocol
     
     func set(header: [String: String]) -> TinyRequestProtocol
-    func set<T: Encodable>(header object: T) -> TinyRequestProtocol
+    func setHeader<T: Encodable>(object: T) -> TinyRequestProtocol
     
     func set(body: Data) -> TinyRequestProtocol
-    func set<T: Encodable>(body object: T) -> TinyRequestProtocol
+    func setBody<T: Encodable>(object: T) -> TinyRequestProtocol
     
     func dataPublisher() -> AnyPublisher<Data, Error>
     func objectPublisher<T: Decodable>(returnType: T.Type) -> AnyPublisher<T, Error>
@@ -20,8 +20,8 @@ public protocol TinyRequestProtocol: AnyObject {
 
 public class TinyRequest: TinyRequestProtocol {
     
-    private var request: URLRequest
-    private var session: URLSession
+    private var request: URLRequestProtocol
+    private var session: URLSessionProtocol
     private var decoder: JSONDecoder
     
     public required convenience init(url: URL) {
@@ -51,7 +51,7 @@ public class TinyRequest: TinyRequestProtocol {
         return self
     }
     
-    public func set<T>(header object: T) -> TinyRequestProtocol where T : Encodable {
+    public func setHeader<T>(object: T) -> TinyRequestProtocol where T : Encodable {
         if let dic = object.toDictionary() as? [String: String] {
             return set(header: dic)
         }
@@ -63,7 +63,7 @@ public class TinyRequest: TinyRequestProtocol {
         return self
     }
     
-    public func set<T>(body object: T) -> TinyRequestProtocol where T : Encodable {
+    public func setBody<T>(object: T) -> TinyRequestProtocol where T : Encodable {
         if let data = object.toData() {
             return set(body: data)
         }
@@ -71,15 +71,7 @@ public class TinyRequest: TinyRequestProtocol {
     }
     
     public func dataPublisher() -> AnyPublisher<Data, Error> {
-        session.dataTaskPublisher(for: request)
-                      .tryMap { data, response -> Data in
-                          if let httpResponse = response as? HTTPURLResponse,
-                                httpResponse.statusCode != 200 {
-                                    throw TinyErrors.invalidResponse(response)
-                          }
-                          return data
-                      }
-                      .eraseToAnyPublisher()
+        session.dataPublisher(for: request)
     }
     
     public func objectPublisher<T>(returnType: T.Type) -> AnyPublisher<T, Error> where T: Decodable {

@@ -9,5 +9,6 @@ import Foundation
 
 public enum TinyErrors: Error {
     case invalidURL
+    case invalidRequest
     case invalidResponse(URLResponse)
 }
