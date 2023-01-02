@@ -12,4 +12,5 @@ public enum TinyRequestMethod: String {
     case post = "POST"
     case put = "PUT"
     case patch = "PATCH"
+    case delete = "DELETE"
 }

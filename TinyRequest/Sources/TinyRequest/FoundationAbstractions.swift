@@ -20,27 +20,3 @@ public protocol URLRequestProtocol {
 }
 
 extension URLRequest: URLRequestProtocol { }
-
-
-/// Abstraction for URLSession
-public protocol URLSessionProtocol {
-    func dataPublisher(for request: URLRequestProtocol) -> AnyPublisher<Data, Error>
-}
-
-extension URLSession: URLSessionProtocol {
-    public func dataPublisher(for request: URLRequestProtocol) -> AnyPublisher<Data, Error> {
-        if let urlRequest = request as? URLRequest {
-            return self.dataTaskPublisher(for: urlRequest)
-                       .tryMap { data, response -> Data in
-                           if let httpResponse = response as? HTTPURLResponse,
-                              httpResponse.statusCode != 200 {
-                              throw TinyErrors.invalidResponse(response)
-                           }
-                    return data
-                }
-                .eraseToAnyPublisher()
-        } else {
-            return Fail(error: TinyErrors.invalidRequest).eraseToAnyPublisher()
-        }
-    }
-}

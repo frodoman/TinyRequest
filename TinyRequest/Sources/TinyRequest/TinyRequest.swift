@@ -2,6 +2,8 @@
 import Foundation
 import Combine
 
+public typealias TinyOutput = (data: Data, response: URLResponse)
+
 public protocol TinyRequestProtocol: AnyObject {
     
     init(url: URL)
@@ -14,14 +16,16 @@ public protocol TinyRequestProtocol: AnyObject {
     func set(body: Data) -> TinyRequestProtocol
     func setBody<T: Encodable>(object: T) -> TinyRequestProtocol
     
-    func dataPublisher() -> AnyPublisher<Data, Error>
+    func outputResponsePublisher() -> AnyPublisher<TinyOutput, URLError>
+    func dataPublisher() -> AnyPublisher<Data, URLError>
+    func responsePublisher() -> AnyPublisher<URLResponse, URLError>
     func objectPublisher<T: Decodable>(returnType: T.Type) -> AnyPublisher<T, Error>
 }
 
 public class TinyRequest: TinyRequestProtocol {
     
     private var request: URLRequestProtocol
-    private var session: URLSessionProtocol
+    private var session: URLSession
     private var decoder: JSONDecoder
     
     public required convenience init(url: URL) {
@@ -70,13 +74,31 @@ public class TinyRequest: TinyRequestProtocol {
         return self
     }
     
-    public func dataPublisher() -> AnyPublisher<Data, Error> {
-        session.dataPublisher(for: request)
+    public func outputResponsePublisher() -> AnyPublisher<TinyOutput, URLError> {
+        guard let urlRequest = request as? URLRequest else {
+            return Fail(error: URLError(.cannotConnectToHost)).eraseToAnyPublisher()
+        }
+        
+        return session.dataTaskPublisher(for: urlRequest)
+                .eraseToAnyPublisher()
+    }
+    
+    public func dataPublisher() -> AnyPublisher<Data, URLError> {
+        outputResponsePublisher()
+            .map(\.data)
+            .eraseToAnyPublisher()
     }
     
     public func objectPublisher<T>(returnType: T.Type) -> AnyPublisher<T, Error> where T: Decodable {
-        dataPublisher()
+        outputResponsePublisher()
+            .map(\.data)
             .decode(type: T.self, decoder: decoder)
+            .eraseToAnyPublisher()
+    }
+    
+    public func responsePublisher() -> AnyPublisher<URLResponse, URLError> {
+        outputResponsePublisher()
+            .map(\.response)
             .eraseToAnyPublisher()
     }
 }
