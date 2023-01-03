@@ -9,7 +9,6 @@ public protocol TinyRequestProtocol: AnyObject {
     init(url: URL)
     
     func set(method: String) -> TinyRequestProtocol
-    
     func set(header: [String: String]) -> TinyRequestProtocol
     func setHeader<T: Encodable>(object: T) -> TinyRequestProtocol
     
@@ -19,7 +18,7 @@ public protocol TinyRequestProtocol: AnyObject {
     func outputResponsePublisher() -> AnyPublisher<TinyOutput, URLError>
     func dataPublisher() -> AnyPublisher<Data, URLError>
     func responsePublisher() -> AnyPublisher<URLResponse, URLError>
-    func objectPublisher<T: Decodable>(returnType: T.Type) -> AnyPublisher<T, Error>
+    func objectPublisher<T: Decodable>(type: T.Type) -> AnyPublisher<T, Error>
 }
 
 public class TinyRequest: TinyRequestProtocol {
@@ -34,7 +33,7 @@ public class TinyRequest: TinyRequestProtocol {
                   decoder: JSONDecoder())
     }
     
-    public init(request: URLRequest,
+    public init(request: URLRequestProtocol,
                 session: URLSession,
                 decoder: JSONDecoder) {
         self.session = session
@@ -89,7 +88,7 @@ public class TinyRequest: TinyRequestProtocol {
             .eraseToAnyPublisher()
     }
     
-    public func objectPublisher<T>(returnType: T.Type) -> AnyPublisher<T, Error> where T: Decodable {
+    public func objectPublisher<T>(type: T.Type) -> AnyPublisher<T, Error> where T: Decodable {
         outputResponsePublisher()
             .map(\.data)
             .decode(type: T.self, decoder: decoder)

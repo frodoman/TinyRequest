@@ -8,15 +8,12 @@ final class TinyRequestTests: XCTestCase {
     
     func testExample() throws {
         
-        guard let url = Bundle.module.url(forResource: "people", withExtension: "json") else {
-            throw TestError.fileNotFound("people.json")
-        }
-        
+        let url = try getMockURL()
         let exp = expectation(description: "Expecting [Person] object")
         
         TinyRequest(url: url)
             .set(method: "GET")
-            .objectPublisher(returnType: [Person].self)
+            .objectPublisher(type: [Person].self)
             .sink { completion in
                 switch completion {
                 case .failure(let error):
@@ -31,5 +28,33 @@ final class TinyRequestTests: XCTestCase {
             .store(in: &cancllables)
         
         wait(for: [exp], timeout: 5)
+    }
+    
+    private func getMockURL() throws -> URL {
+        guard let url = Bundle.module.url(forResource: "people", withExtension: "json") else {
+            throw TestError.fileNotFound("people.json")
+        }
+        return url
+    }
+    
+    func testSetMethod() throws {
+        let mockRequest = MockURLRequest()
+        let tinyRequest = TinyRequest(request: mockRequest,
+                                      session: .shared,
+                                      decoder: JSONDecoder())
+        
+        _ = tinyRequest.set(method: "ANY")
+        
+        XCTAssertEqual(mockRequest.httpMethod, "ANY")
+    }
+    
+    func testSetHeader() throws {
+        let mockRequest = MockURLRequest()
+        let tinyRequest = TinyRequest(request: mockRequest,
+                                      session: .shared,
+                                      decoder: JSONDecoder())
+        _ = tinyRequest.set(header: ["header-key": "h-value"])
+        
+        XCTAssertEqual(mockRequest.allHTTPHeaderFields!["header-key"], "h-value")
     }
 }
