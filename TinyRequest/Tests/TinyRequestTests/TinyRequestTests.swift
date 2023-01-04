@@ -57,4 +57,24 @@ final class TinyRequestTests: XCTestCase {
         
         XCTAssertEqual(mockRequest.allHTTPHeaderFields!["header-key"], "h-value")
     }
+    
+    func testSetHeaderObject() throws {
+        let header = ["header": "h-value"]
+        let mockRequest = MockURLRequest()
+        let tinyRequest = TinyRequest(request: mockRequest,
+                                      session: .shared,
+                                      decoder: JSONDecoder())
+        
+        _ = tinyRequest.setHeader(object: header)
+        
+        XCTAssertEqual(mockRequest.allHTTPHeaderFields!["header"], "h-value")
+    }
+    
+    func testSetBody() throws {
+        
+    }
+    
+    func testSetBodyObject() throws {
+        
+    }
 }

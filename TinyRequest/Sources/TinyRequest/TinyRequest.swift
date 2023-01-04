@@ -2,8 +2,6 @@
 import Foundation
 import Combine
 
-public typealias TinyOutput = (data: Data, response: URLResponse)
-
 public protocol TinyRequestProtocol: AnyObject {
     
     init(url: URL)
@@ -15,7 +13,7 @@ public protocol TinyRequestProtocol: AnyObject {
     func set(body: Data) -> TinyRequestProtocol
     func setBody<T: Encodable>(object: T) -> TinyRequestProtocol
     
-    func outputResponsePublisher() -> AnyPublisher<TinyOutput, URLError>
+    func outputResponsePublisher() -> AnyPublisher<URLSession.DataTaskPublisher.Output, URLError>
     func dataPublisher() -> AnyPublisher<Data, URLError>
     func responsePublisher() -> AnyPublisher<URLResponse, URLError>
     func objectPublisher<T: Decodable>(type: T.Type) -> AnyPublisher<T, Error>
@@ -73,7 +71,7 @@ public class TinyRequest: TinyRequestProtocol {
         return self
     }
     
-    public func outputResponsePublisher() -> AnyPublisher<TinyOutput, URLError> {
+    public func outputResponsePublisher() -> AnyPublisher<URLSession.DataTaskPublisher.Output, URLError> {
         guard let urlRequest = request as? URLRequest else {
             return Fail(error: URLError(.cannotConnectToHost)).eraseToAnyPublisher()
         }
