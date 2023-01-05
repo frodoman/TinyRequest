@@ -21,6 +21,8 @@ public protocol TinyServiceProtocol {
     var decoder: JSONDecoder {get}
     
     func outputResponsePublisher() -> AnyPublisher<URLSession.DataTaskPublisher.Output, URLError>
+    func dataPublisher() -> AnyPublisher<Data, URLError>
+    func responsePublisher() -> AnyPublisher<URLResponse, URLError>
     func objectPublisher<T: Decodable>(type: T.Type) -> AnyPublisher<T, Error>
 }
 
@@ -44,10 +46,22 @@ extension TinyServiceProtocol {
         return tinyRequest.outputResponsePublisher()
     }
     
-    func objectPublisher<T>(type: T.Type) -> AnyPublisher<T, Error> where T: Decodable {
-        return self.outputResponsePublisher()
+    public func objectPublisher<T>(type: T.Type) -> AnyPublisher<T, Error> where T: Decodable {
+        outputResponsePublisher()
             .map(\.data)
             .decode(type: T.self, decoder: self.decoder)
+            .eraseToAnyPublisher()
+    }
+    
+    public func dataPublisher() -> AnyPublisher<Data, URLError> {
+        outputResponsePublisher()
+            .map(\.data)
+            .eraseToAnyPublisher()
+    }
+    
+    public func responsePublisher() -> AnyPublisher<URLResponse, URLError> {
+        outputResponsePublisher()
+            .map(\.response)
             .eraseToAnyPublisher()
     }
 }

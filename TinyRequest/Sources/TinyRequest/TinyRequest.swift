@@ -19,7 +19,7 @@ public protocol TinyRequestProtocol: AnyObject {
     func objectPublisher<T: Decodable>(type: T.Type) -> AnyPublisher<T, Error>
 }
 
-public class TinyRequest: TinyRequestProtocol {
+open class TinyRequest: TinyRequestProtocol {
     
     private var request: URLRequestProtocol
     private var session: URLSession
