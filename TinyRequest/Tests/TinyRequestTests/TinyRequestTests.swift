@@ -6,7 +6,14 @@ final class TinyRequestTests: XCTestCase {
     
     var cancllables: [AnyCancellable] = []
     
-    func testExample() throws {
+    private func getMockURL() throws -> URL {
+        guard let url = Bundle.module.url(forResource: "people", withExtension: "json") else {
+            throw TestError.fileNotFound("people.json")
+        }
+        return url
+    }
+    
+    func testObjectPublisher() throws {
         
         let url = try getMockURL()
         let exp = expectation(description: "Expecting [Person] object")
@@ -30,12 +37,52 @@ final class TinyRequestTests: XCTestCase {
         wait(for: [exp], timeout: 5)
     }
     
-    private func getMockURL() throws -> URL {
-        guard let url = Bundle.module.url(forResource: "people", withExtension: "json") else {
-            throw TestError.fileNotFound("people.json")
-        }
-        return url
+    func testDataPublisher() throws {
+        let url = try getMockURL()
+        let exp = expectation(description: "Expecting [Person] object")
+        
+        let expectedData = try Data(contentsOf: url)
+        
+        TinyRequest(url: url)
+            .dataPublisher()
+            .sink { completion in
+                switch completion {
+                case .failure(let error):
+                    XCTFail(error.localizedDescription)
+                case .finished:
+                    break
+                }
+            } receiveValue: { data in
+                XCTAssertEqual(data, expectedData)
+                exp.fulfill()
+            }
+            .store(in: &cancllables)
+        
+        wait(for: [exp], timeout: 5)
     }
+    
+    func testResponsePublisher() throws {
+        let url = try getMockURL()
+        let exp = expectation(description: "Expecting [Person] object")
+          
+        TinyRequest(url: url)
+            .responsePublisher()
+            .sink { completion in
+                switch completion {
+                case .failure(let error):
+                    XCTFail(error.localizedDescription)
+                case .finished:
+                    break
+                }
+            } receiveValue: { response in
+                XCTAssertEqual(response.url, url)
+                exp.fulfill()
+            }
+            .store(in: &cancllables)
+        
+        wait(for: [exp], timeout: 5)
+    }
+    
     
     func testSetMethod() throws {
         let mockRequest = MockURLRequest()
@@ -71,10 +118,28 @@ final class TinyRequestTests: XCTestCase {
     }
     
     func testSetBody() throws {
+        let bodyData = ["body": "body-value"].toData()
+        let mockRequest = MockURLRequest()
+        let tinyRequest = TinyRequest(request: mockRequest,
+                                      session: .shared,
+                                      decoder: JSONDecoder())
         
+        _ = tinyRequest.set(body: bodyData!)
+        
+        XCTAssertEqual(mockRequest.httpBody, bodyData)
     }
     
     func testSetBodyObject() throws {
+        let person = Person(firstName: "FirstName", lastName: "LastName")
+        let bodyData = person.toData()
         
+        let mockRequest = MockURLRequest()
+        let tinyRequest = TinyRequest(request: mockRequest,
+                                      session: .shared,
+                                      decoder: JSONDecoder())
+        
+        _ = tinyRequest.setBody(object: person)
+        
+        XCTAssertEqual(mockRequest.httpBody, bodyData)
     }
 }
