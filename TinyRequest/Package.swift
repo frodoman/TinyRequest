@@ -27,6 +27,7 @@ let package = Package(
             dependencies: ["TinyRequest"],
             resources: [
                    .copy("MockObjects/people.json"),
+                   .copy("MockObjects/person.json")
                  ]),
     ]
 )

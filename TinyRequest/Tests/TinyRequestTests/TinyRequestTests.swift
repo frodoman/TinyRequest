@@ -7,10 +7,7 @@ final class TinyRequestTests: XCTestCase {
     var cancllables: [AnyCancellable] = []
     
     private func getMockURL() throws -> URL {
-        guard let url = Bundle.module.url(forResource: "people", withExtension: "json") else {
-            throw TestError.fileNotFound("people.json")
-        }
-        return url
+        try MockData.urlForFile(name: "people", type: "json")
     }
     
     func testObjectPublisher() throws {

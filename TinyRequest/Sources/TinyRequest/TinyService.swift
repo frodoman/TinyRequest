@@ -20,20 +20,28 @@ public protocol TinyServiceProtocol {
     
     var decoder: JSONDecoder {get}
     
-    func outputResponsePublisher() -> AnyPublisher<URLSession.DataTaskPublisher.Output, URLError>
+    func dataResponsePublisher() -> AnyPublisher<URLSession.DataTaskPublisher.Output, URLError>
     func dataPublisher() -> AnyPublisher<Data, URLError>
     func responsePublisher() -> AnyPublisher<URLResponse, URLError>
     func objectPublisher<T: Decodable>(type: T.Type) -> AnyPublisher<T, Error>
 }
 
 extension TinyServiceProtocol {
-    public func outputResponsePublisher() -> AnyPublisher<URLSession.DataTaskPublisher.Output, URLError> {
+    public func dataResponsePublisher() -> AnyPublisher<URLSession.DataTaskPublisher.Output, URLError> {
         
-        guard let url = self.url else {
+        var validURL: URL
+        
+        if let url = self.url {
+            validURL = url
+            
+        } else if let url = URL(string: self.baseUrl + self.urlPath) {
+            validURL = url
+            
+        } else {
             return Fail(error: URLError(.badURL)).eraseToAnyPublisher()
         }
         
-        var tinyRequest = TinyRequest(url: url).set(method: self.method)
+        var tinyRequest = TinyRequest(url: validURL).set(method: self.method)
         
         if let header = self.header {
             tinyRequest = tinyRequest.set(header: header)
@@ -47,20 +55,20 @@ extension TinyServiceProtocol {
     }
     
     public func objectPublisher<T>(type: T.Type) -> AnyPublisher<T, Error> where T: Decodable {
-        outputResponsePublisher()
+        dataResponsePublisher()
             .map(\.data)
             .decode(type: T.self, decoder: self.decoder)
             .eraseToAnyPublisher()
     }
     
     public func dataPublisher() -> AnyPublisher<Data, URLError> {
-        outputResponsePublisher()
+        dataResponsePublisher()
             .map(\.data)
             .eraseToAnyPublisher()
     }
     
     public func responsePublisher() -> AnyPublisher<URLResponse, URLError> {
-        outputResponsePublisher()
+        dataResponsePublisher()
             .map(\.response)
             .eraseToAnyPublisher()
     }
