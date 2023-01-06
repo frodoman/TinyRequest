@@ -110,4 +110,25 @@ final class TestTinyService: XCTestCase {
         
         wait(for: [exp], timeout: 5)
     }
+    
+    func testInvalidService() throws {
+        let exp = expectation(description: "Expecting a Person object")
+
+        InvalidService.downloadSomething
+            .dataResponsePublisher()
+            .sink { completion in
+                switch completion {
+                case .failure:
+                    exp.fulfill()
+                    
+                case .finished:
+                    break
+                }
+            } receiveValue: { data, response in
+                XCTFail()
+            }
+            .store(in: &cancllables)
+        
+        wait(for: [exp], timeout: 5)
+    }
 }
