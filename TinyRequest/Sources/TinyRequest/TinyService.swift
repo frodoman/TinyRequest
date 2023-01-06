@@ -13,8 +13,9 @@ public protocol TinyServiceProtocol {
     var url: URL? {get}
     var baseUrl: String {get}
     var urlPath: String {get}
-    var method: String {get}
+    var queryItems: [URLQueryItem]? {get}
     
+    var method: String {get}
     var header: [String: String]? {get}
     var body: Data? {get}
     
@@ -27,6 +28,11 @@ public protocol TinyServiceProtocol {
 }
 
 extension TinyServiceProtocol {
+    
+    public var url: URL? {
+        nil
+    }
+    
     public func dataResponsePublisher() -> AnyPublisher<URLSession.DataTaskPublisher.Output, URLError> {
         
         var validURL: URL
@@ -39,6 +45,11 @@ extension TinyServiceProtocol {
             
         } else {
             return Fail(error: URLError(.badURL)).eraseToAnyPublisher()
+        }
+        
+        if let queryItems = self.queryItems,
+           let queryUrl = validURL.append(queryItems: queryItems) {
+            validURL = queryUrl
         }
         
         var tinyRequest = TinyRequest(url: validURL).set(method: self.method)

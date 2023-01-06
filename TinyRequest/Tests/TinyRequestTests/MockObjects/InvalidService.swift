@@ -26,6 +26,10 @@ extension InvalidService: TinyServiceProtocol {
         "/download/something"
     }
     
+    var queryItems: [URLQueryItem]? {
+        return [URLQueryItem(name: "firstName", value: "James")]
+    }
+    
     var method: String {
         TinyRequestMethod.post.rawValue
     }

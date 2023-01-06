@@ -35,6 +35,10 @@ extension PeopleService: TinyServiceProtocol {
         ""
     }
     
+    var queryItems: [URLQueryItem]? {
+        nil
+    }
+    
     var method: String {
         TinyRequestMethod.get.rawValue
     }
