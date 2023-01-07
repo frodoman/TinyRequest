@@ -76,7 +76,7 @@ let tiny = TinyRequest(request: URLRequest(url: URL(string: "xxx")!),
 
 For example, we can define a ```FileService``` confirming to `TinyServiceProtocol` for the following API documents 
 
-#### Get a file object from backend
+#### Get a list of file objects from backend
 
 - Method: ```GET``` 
 - Path:   ```items/{id}``` (```id``` is a ```String``` type)
