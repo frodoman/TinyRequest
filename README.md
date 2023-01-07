@@ -74,7 +74,9 @@ let tiny = TinyRequest(request: URLRequest(url: URL(string: "xxx")!),
 
 ### For a group of API requests, please confirm to `TinyServiceProtocol`
 
-#### For example, we can define a ```FileService``` confirming to `TinyServiceProtocol` for the following API documents 
+For example, we can define a ```FileService``` confirming to `TinyServiceProtocol` for the following API documents 
+
+#### items/{id}
 
 - Method: ```GET``` 
 - Path:   ```items/{id}``` (```id``` is a ```String``` type)
@@ -105,6 +107,8 @@ let tiny = TinyRequest(request: URLRequest(url: URL(string: "xxx")!),
   }
 ]
 ```
+
+#### items/{id}
 
 - Method: ```DELETE``` 
 - Path:   ```items/{id}``` (where ```id``` is a ```String``` type)
