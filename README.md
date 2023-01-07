@@ -56,10 +56,10 @@ TinyRequest(url: URL(string: "https://www.some-url.com")!)
 
 #### For example, we can define a ```FileService``` confirming to `TinyServiceProtocol` for the following API documents 
 
-** Method **: ```GET``` 
-** Path **:   ```items/{id}``` (where ```id``` is a ```String``` type)
-** URI Parameters **: None 
-** Response ** ```200```
+- ** Method **: ```GET``` 
+- ** Path **:   ```items/{id}``` (where ```id``` is a ```String``` type)
+- ** URI Parameters **: None 
+- ** Response ** ```200```
    - Response headers: 
 ```
     Content-Type: application/json
@@ -86,10 +86,10 @@ TinyRequest(url: URL(string: "https://www.some-url.com")!)
 ]
 ```
 
-** Method **: ```DELETE``` 
-** Path **:   ```items/{id}``` (where ```id``` is a ```String``` type)
-** URI Parameters **: None 
-** Response ** ```204``` if sccessfully deleted  
+- ** Method **: ```DELETE``` 
+- ** Path **:   ```items/{id}``` (where ```id``` is a ```String``` type)
+- ** URI Parameters **: None 
+- ** Response ** ```204``` if sccessfully deleted  
 
 ```
 
