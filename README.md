@@ -6,7 +6,7 @@ TinyRequest is a handy Swift package of doing networking request, in a declarati
 1. On the Xcode top menu, go to ```File -> Add Packages```
 2. Enter this for searching package URL https://github.com/frodoman/TinyRequest 
 3. Select the version for the package, using the latest version is highly recommanded. Please refer to [Latest Releases](https://github.com/frodoman/TinyRequest/releases) for the latest release version
-4. That's done!
+
 
 ## Sample codes
 
@@ -50,6 +50,14 @@ TinyRequest(url: URL(string: "https://www.some-url.com")!)
     .set(header: ["token":"xxx"])
     .set(body: Data())
     .responsePublisher()
+```
+
+### Initialising ```TinyRequest``` with more arguments
+
+```
+let tiny = TinyRequest(request: URLRequest(url: URL(string: "xxx")!),
+                       session: URLSession(configuration: /* */)
+                       decoder: JSONDecoder())
 ```
 
 ### For a group of API requests, please confirm to `TinyServiceProtocol`
