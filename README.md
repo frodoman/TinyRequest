@@ -1,9 +1,9 @@
 # TinyRequest
 
-Tiny Request is a easy and handy way of doing networking request with Swift. 
+TinyRequest is a handy Swift package of doing networking request, in a declarative way with [Combine](https://developer.apple.com/documentation/combine) and chainning style.  
 
 ## How to add TinyRequest package to an Xcode project 
-1. On the Xcode top menu, go to File -> Add Packages
+1. On the Xcode top menu, go to ```File -> Add Packages```
 2. Enter this for searching package URL https://github.com/frodoman/TinyRequest 
 3. Select the version for the package, using the latest version is highly recommanded. Please refer to [Latest Releases](https://github.com/frodoman/TinyRequest/releases) for the latest release version
 4. That's done!
@@ -54,7 +54,7 @@ TinyRequest(url: URL(string: "https://www.some-url.com")!)
 
 ### For a group of API requests, please confirm to `TinyServiceProtocol`
 
-#### For the following API documents, we can define a ```FileService``` confirming to `TinyServiceProtocol`   
+#### For example, we can define a ```FileService``` confirming to `TinyServiceProtocol` for the following API documents 
 
 ** Method **: ```GET``` 
 ** Path **:   ```items/{id}``` (where ```id``` is a ```String``` type)
@@ -191,4 +191,3 @@ class ViewModel {
     }   
 }
 ```
-
