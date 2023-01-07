@@ -37,6 +37,7 @@ extension TinyServiceProtocol {
         
         var validURL: URL
         
+        // Preparing the URL
         if let url = self.url {
             validURL = url
             
@@ -47,12 +48,15 @@ extension TinyServiceProtocol {
             return Fail(error: URLError(.badURL)).eraseToAnyPublisher()
         }
         
+        // Add query items to URL
         if let queryItems = self.queryItems,
            let queryUrl = validURL.append(queryItems: queryItems) {
             validURL = queryUrl
         }
         
-        var tinyRequest = TinyRequest(url: validURL).set(method: self.method)
+        // Adding method, header and body for the request
+        var tinyRequest = TinyRequest(url: validURL)
+            .set(method: self.method)
         
         if let header = self.header {
             tinyRequest = tinyRequest.set(header: header)
