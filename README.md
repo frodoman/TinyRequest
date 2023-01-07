@@ -40,6 +40,12 @@ TinyRequest(url: URL(string: "https://www.some-url.com")!)
     .set(header: ["token":"xxx"])
     .set(body: Data())
     .dataPublisher()
+    .sink { completion in
+        // handle completion
+        
+    } receiveValue: { userAccount in
+        // Do something...
+    }
 ```
 
 ### Getting a response from a URL 
@@ -50,6 +56,12 @@ TinyRequest(url: URL(string: "https://www.some-url.com")!)
     .set(header: ["token":"xxx"])
     .set(body: Data())
     .responsePublisher()
+    .sink { completion in
+        // handle completion
+        
+    } receiveValue: { userAccount in
+        // Do something...
+    }
 ```
 
 ### Initialising ```TinyRequest``` with more arguments
@@ -65,7 +77,7 @@ let tiny = TinyRequest(request: URLRequest(url: URL(string: "xxx")!),
 #### For example, we can define a ```FileService``` confirming to `TinyServiceProtocol` for the following API documents 
 
 - Method: ```GET``` 
-- Path:   ```items/{id}``` (where ```id``` is a ```String``` type)
+- Path:   ```items/{id}``` (```id``` is a ```String``` type)
 - URI Parameters: None 
 - Response: ```200```
    - Response headers: 
@@ -157,7 +169,7 @@ extension FileService: TinyServiceProtocol {
 }
 ```
 
-#### Then we can use ```FileService``` like these in a ```ViewModel```: 
+#### Then we can use ```FileService``` like the following in a ```ViewModel```: 
 
 ```
 import TinyRequest
