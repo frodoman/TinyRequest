@@ -28,7 +28,8 @@ TinyRequest(url: URL(string: "https://www.some-url.com")!)
         // handle completion
         
     } receiveValue: { userAccount in
-        // Do something...
+        // Do something
+        print("Account name is: \(userAccount.firstName) \(userAccount.lastName)")
     }
 ```
 
@@ -43,8 +44,8 @@ TinyRequest(url: URL(string: "https://www.some-url.com")!)
     .sink { completion in
         // handle completion
         
-    } receiveValue: { userAccount in
-        // Do something...
+    } receiveValue: { data in
+        // Do something with the data object
     }
 ```
 
@@ -59,7 +60,7 @@ TinyRequest(url: URL(string: "https://www.some-url.com")!)
     .sink { completion in
         // handle completion
         
-    } receiveValue: { userAccount in
+    } receiveValue: { response in
         // Do something...
     }
 ```
@@ -74,7 +75,7 @@ let tiny = TinyRequest(request: URLRequest(url: URL(string: "xxx")!),
 
 ### For a group of API requests, please confirm to `TinyServiceProtocol`
 
-For example, we can define a ```FileService``` confirming to `TinyServiceProtocol` for the following API documents 
+**For example, for the following API documents** 
 
 #### API 1: Get a list of file objects from backend
 
@@ -118,6 +119,8 @@ For example, we can define a ```FileService``` confirming to `TinyServiceProtoco
 - Response: ```204``` if sccessfully deleted  
 
 ```
+
+**we can define a ```FileService``` confirming to `TinyServiceProtocol` like these:** 
 
 public struct FileItem: Decodable {
     public let id: String
