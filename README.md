@@ -5,7 +5,7 @@ TinyRequest is a handy Swift package of doing networking request, in a declarati
 ## How to add TinyRequest package to an Xcode project 
 1. On the Xcode top menu, go to ```File -> Add Packages```
 2. Enter this for searching package URL https://github.com/frodoman/TinyRequest 
-3. Select the version for the package, using the latest version is highly recommanded. Please refer to [Latest Releases](https://github.com/frodoman/TinyRequest/releases) for the latest release version
+3. Select the version for the package, using the latest version is highly recommanded. Please refer to [Releases](https://github.com/frodoman/TinyRequest/releases) for the latest release version
 
 
 ## Sample codes
@@ -13,12 +13,6 @@ TinyRequest is a handy Swift package of doing networking request, in a declarati
 ### Getting a decodable oject from a URL
 
 ```
-struct UserAccount: Decodable {
-        let firstName: String
-        let lastName: String
-        let userId: String
-}
-
 TinyRequest(url: URL(string: "https://www.some-url.com")!)
     .set(method: "GET")
     .set(header: ["token":"xxx"])
@@ -31,13 +25,19 @@ TinyRequest(url: URL(string: "https://www.some-url.com")!)
         // Do something
         print("Account name is: \(userAccount.firstName) \(userAccount.lastName)")
     }
+    
+struct UserAccount: Decodable {
+        let firstName: String
+        let lastName: String
+        let userId: String
+}
 ```
 
 ### Getting data from a URL 
 
 ```
 TinyRequest(url: URL(string: "https://www.some-url.com")!)
-    .set(method: "GET")
+    .set(method: "POST")
     .set(header: ["token":"xxx"])
     .set(body: Data())
     .dataPublisher()
@@ -65,12 +65,12 @@ TinyRequest(url: URL(string: "https://www.some-url.com")!)
     }
 ```
 
-### Initialising ```TinyRequest``` with more arguments
+### Initialising ```TinyRequest``` with more options
 
 ```
-let tiny = TinyRequest(request: URLRequest(url: URL(string: "xxx")!),
-                       session: URLSession(configuration: /* */)
-                       decoder: JSONDecoder())
+let request = TinyRequest(request: URLRequest(url: URL(string: "xxx")!),
+                          session: URLSession(configuration: /* */)
+                          decoder: JSONDecoder())
 ```
 
 ### For a group of API requests, please confirm to `TinyServiceProtocol`
@@ -118,19 +118,9 @@ let tiny = TinyRequest(request: URLRequest(url: URL(string: "xxx")!),
 - URI Parameters: None 
 - Response: ```204``` if sccessfully deleted  
 
-**we can define a ```FileService``` confirming to `TinyServiceProtocol` like in the following:** 
+**we can define a ```FileService``` confirming to `TinyServiceProtocol` like these:** 
 
 ```
-public struct FileItem: Decodable {
-    public let id: String
-    public var parentId: String?
-    public let name: String
-    public let isDir: Bool
-    
-    public var contentType: ContentType?
-    public var size: Int?
-}
-
 enum FileService {
     case getItem(String)
     case deleteItem(String)
@@ -175,9 +165,19 @@ extension FileService: TinyServiceProtocol {
         JSONDecoder()
     }
 }
+
+public struct FileItem: Decodable {
+    public let id: String
+    public var parentId: String?
+    public let name: String
+    public let isDir: Bool
+    
+    public var contentType: ContentType?
+    public var size: Int?
+}
 ```
 
-#### Then we can use ```FileService``` like the following in a ```ViewModel```: 
+#### Then we can then use ```FileService``` in a ```ViewModel```: 
 
 ```
 import TinyRequest
