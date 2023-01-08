@@ -118,7 +118,7 @@ let tiny = TinyRequest(request: URLRequest(url: URL(string: "xxx")!),
 - URI Parameters: None 
 - Response: ```204``` if sccessfully deleted  
 
-**we can define a ```FileService``` confirming to `TinyServiceProtocol` like these:** 
+**we can define a ```FileService``` confirming to `TinyServiceProtocol` like in the following:** 
 
 ```
 public struct FileItem: Decodable {
