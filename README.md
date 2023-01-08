@@ -74,9 +74,9 @@ let tiny = TinyRequest(request: URLRequest(url: URL(string: "xxx")!),
 ```
 
 ### For a group of API requests, please confirm to `TinyServiceProtocol`
-
+ 
 **For example, for the following API documents** 
-
+ 
 #### API 1: Get a list of file objects from backend
 
 - Host: ```https://www.some-fake-cloud-file-storage.com```
@@ -118,10 +118,9 @@ let tiny = TinyRequest(request: URLRequest(url: URL(string: "xxx")!),
 - URI Parameters: None 
 - Response: ```204``` if sccessfully deleted  
 
-```
-
 **we can define a ```FileService``` confirming to `TinyServiceProtocol` like these:** 
 
+```
 public struct FileItem: Decodable {
     public let id: String
     public var parentId: String?
