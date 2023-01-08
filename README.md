@@ -78,6 +78,7 @@ For example, we can define a ```FileService``` confirming to `TinyServiceProtoco
 
 #### API 1: Get a list of file objects from backend
 
+- Host: ```https://www.some-fake-cloud-file-storage.com```
 - Method: ```GET``` 
 - Path:   ```items/{id}``` (```id``` is a ```String``` type)
 - URI Parameters: None 
@@ -110,6 +111,7 @@ For example, we can define a ```FileService``` confirming to `TinyServiceProtoco
 
 #### API 2: Delete a file and associated object in backend
 
+- Host: ```https://www.some-fake-cloud-file-storage.com```
 - Method: ```DELETE``` 
 - Path:   ```items/{id}``` (where ```id``` is a ```String``` type)
 - URI Parameters: None 
@@ -135,11 +137,7 @@ enum FileService {
 extension FileService: TinyServiceProtocol {
     
     public var baseUrl: String {
-        "https://www.some.host.com"
-    }
-    
-    public var decoder: JSONDecoder {
-        JSONDecoder()
+        "https://www.some-fake-cloud-file-storage.com"
     }
     
     public var urlPath: String {
@@ -169,6 +167,10 @@ extension FileService: TinyServiceProtocol {
     
     public var body: Data? {
         nil
+    }
+    
+    public var decoder: JSONDecoder {
+        JSONDecoder()
     }
 }
 ```
