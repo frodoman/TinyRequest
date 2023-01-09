@@ -92,20 +92,20 @@ let request = TinyRequest(request: URLRequest(url: URL(string: "xxx")!),
 ```
 [
   {
-    "id": "a8537d631d21a8b7fdbbcd11e4d2e5d09d61971d",
+    "id": "file-item-id-1",
     "isDir": true,
-    "modificationDate": "2015-11-05 09:14 CET",
+    "modificationDate": "2022-11-05 09:14 CET",
     "name": "Documents",
-    "parentId": "ec94bd0365b352832710f171bd8463b6d9caf6e7"
+    "parentId": "file-item-id-2"
   },
   {
     "contentType": "image/jpg",
-    "id": "e788eb7b65f4f16cbfac9e50cbec7c01c1fb6e61",
+    "id": "file-item-id-3",
     "isDir": false,
-    "modificationDate": "2015-11-05 09:51 CET",
-    "name": "picture.jpg",
-    "parentId": "ec94bd0365b352832710f171bd8463b6d9caf6e7",
-    "size": 164568
+    "modificationDate": "2022-11-05 09:51 CET",
+    "name": "picture-3.jpg",
+    "parentId": "file-item-id-2",
+    "size": 200000
   }
 ]
 ```
