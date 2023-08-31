@@ -139,4 +139,15 @@ final class TinyRequestTests: XCTestCase {
         
         XCTAssertEqual(mockRequest.httpBody, bodyData)
     }
+    
+    func testAsyncFunction() async throws {
+        let url = try getMockURL()
+        
+        let people = try await TinyRequest(url: url)
+                                .set(method: "GET")
+                                .objectResponse(type: [Person].self)
+        
+        XCTAssertTrue(people.count > 0)
+        
+    }
 }

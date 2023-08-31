@@ -17,6 +17,10 @@ public protocol TinyRequestProtocol: AnyObject {
     func dataPublisher() -> AnyPublisher<Data, URLError>
     func responsePublisher() -> AnyPublisher<URLResponse, URLError>
     func objectPublisher<T: Decodable>(type: T.Type) -> AnyPublisher<T, Error>
+    
+    // async / await
+    func dataResponse() async throws -> (Data, URLResponse)
+    func objectResponse<T: Decodable>(type: T.Type) async throws -> T
 }
 
 open class TinyRequest: TinyRequestProtocol {
@@ -97,5 +101,23 @@ open class TinyRequest: TinyRequestProtocol {
         outputResponsePublisher()
             .map(\.response)
             .eraseToAnyPublisher()
+    }
+}
+
+// Async/Await functions
+extension TinyRequest {
+    
+    public func dataResponse() async throws -> (Data, URLResponse) {
+        guard let urlRequest = request as? URLRequest else {
+            throw URLError(.cannotFindHost)
+        }
+        
+        return try await session.data(for: urlRequest)
+    }
+    
+    public func objectResponse<T>(type: T.Type) async throws -> T where T: Decodable {
+        let (data, _) = try await dataResponse()
+        let object = try decoder.decode(T.self, from: data)
+        return object
     }
 }
