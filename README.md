@@ -12,6 +12,18 @@ TinyRequest is a handy Swift package of doing networking request, in a declarati
 
 ### Getting a decodable oject from a URL
 
+#### By using Async/Await 
+
+```
+let users = try? await TinyRequest(url: URL(string: "https://www.some-url.com")!)
+                            .set(method: "GET")
+                            .set(header: ["token": "xxx"])
+                            .set(body: Data())
+                            .objectResponse(type: UserAccount.self)
+```
+
+#### By using Combine
+
 ```
 TinyRequest(url: URL(string: "https://www.some-url.com")!)
     .set(method: "GET")
