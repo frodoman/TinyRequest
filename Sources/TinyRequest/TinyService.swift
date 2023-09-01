@@ -1,9 +1,3 @@
-//
-//  File.swift
-//  
-//
-//  Created by X_coder on 05/01/2023.
-//
 
 import Foundation
 import Combine
@@ -37,34 +31,13 @@ extension TinyServiceProtocol {
         
         var validURL: URL
         
-        // Preparing the URL
-        if let url = self.url {
-            validURL = url
-            
-        } else if let url = URL(string: self.baseUrl + self.urlPath) {
-            validURL = url
-            
-        } else {
+        do {
+            validURL = try prepareURL()
+        } catch {
             return Fail(error: URLError(.badURL)).eraseToAnyPublisher()
         }
-        
-        // Add query items to URL
-        if let queryItems = self.queryItems,
-           let queryUrl = validURL.append(queryItems: queryItems) {
-            validURL = queryUrl
-        }
-        
-        // Adding method, header and body for the request
-        var tinyRequest = TinyRequest(url: validURL)
-            .set(method: self.method)
-        
-        if let header = self.header {
-            tinyRequest = tinyRequest.set(header: header)
-        }
-        
-        if let body = self.body {
-            tinyRequest = tinyRequest.set(body: body)
-        }
+
+        let tinyRequest = prepareRequest(url: validURL)
         
         return tinyRequest.outputResponsePublisher()
     }
@@ -86,5 +59,43 @@ extension TinyServiceProtocol {
         dataResponsePublisher()
             .map(\.response)
             .eraseToAnyPublisher()
+    }
+    
+    func prepareURL() throws -> URL {
+        var validURL: URL
+        
+        // Preparing the URL
+        if let url = self.url {
+            validURL = url
+            
+        } else if let url = URL(string: self.baseUrl + self.urlPath) {
+            validURL = url
+            
+        } else {
+            throw URLError(.badURL)
+        }
+        
+        // Add query items to URL
+        if let queryItems = self.queryItems,
+           let queryUrl = validURL.append(queryItems: queryItems) {
+            validURL = queryUrl
+        }
+        
+        return validURL
+    }
+    
+    func prepareRequest(url: URL) -> TinyRequestProtocol {
+        var tinyRequest = TinyRequest(url: url)
+                            .set(method: self.method)
+        
+        if let header = self.header {
+            tinyRequest = tinyRequest.set(header: header)
+        }
+        
+        if let body = self.body {
+            tinyRequest = tinyRequest.set(body: body)
+        }
+        
+        return tinyRequest
     }
 }

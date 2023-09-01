@@ -131,4 +131,16 @@ final class TestTinyService: XCTestCase {
         
         wait(for: [exp], timeout: 5)
     }
+    
+    func testAsyncObjectResponse() async throws {
+        let people = try await PeopleService.getPeople.asyncObject(type: [Person].self)
+        XCTAssertTrue(people.count > 0)
+    }
+    
+    func testAsyncDataResponse() async throws {
+        let (data, response) = try await PeopleService.getPeople.asyncDataResponse()
+        
+        XCTAssertNotNil(response.url)
+        XCTAssertFalse(data.isEmpty)
+    }
 }

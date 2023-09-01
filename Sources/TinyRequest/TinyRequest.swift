@@ -104,10 +104,10 @@ open class TinyRequest: TinyRequestProtocol {
     }
 }
 
-// Async/Await functions
-extension TinyRequest {
-    
-    public func dataResponse() async throws -> (Data, URLResponse) {
+///
+/// Async / Await
+public extension TinyRequest {
+    func dataResponse() async throws -> (Data, URLResponse) {
         guard let urlRequest = request as? URLRequest else {
             throw URLError(.cannotFindHost)
         }
@@ -115,7 +115,7 @@ extension TinyRequest {
         return try await session.data(for: urlRequest)
     }
     
-    public func objectResponse<T>(type: T.Type) async throws -> T where T: Decodable {
+    func objectResponse<T>(type: T.Type) async throws -> T where T: Decodable {
         let (data, _) = try await dataResponse()
         let object = try decoder.decode(T.self, from: data)
         return object
