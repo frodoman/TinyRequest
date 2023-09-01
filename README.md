@@ -47,6 +47,19 @@ struct UserAccount: Decodable {
 
 ### Getting data from a URL 
 
+#### By using sync/await
+ 
+```
+let (data, response) = try await TinyRequest(url: URL(string: "https://www.some-url.com")!)
+                                    .set(method: "POST")
+                                    .set(header: ["token":"xxx"])
+                                    .set(body: Data())
+                                    .dataResponse()
+```
+
+
+#### By using Combine
+
 ```
 TinyRequest(url: URL(string: "https://www.some-url.com")!)
     .set(method: "POST")
@@ -130,7 +143,7 @@ let request = TinyRequest(request: URLRequest(url: URL(string: "xxx")!),
 - URI Parameters: None 
 - Response: ```204``` if sccessfully deleted  
 
-**we can define a ```FileService``` confirming to `TinyServiceProtocol` like these:** 
+**We can define a ```FileService``` confirming to `TinyServiceProtocol` like these:** 
 
 ```
 enum FileService {
@@ -191,6 +204,35 @@ public struct FileItem: Decodable {
 
 #### Then we can then use ```FileService``` in a ```ViewModel```: 
 
+
+** By using Async/Await **
+```
+import TinyRequest
+
+class ViewModel {
+     
+    func getFile(itemId: String) async {
+    
+        let fileItems = try? await FileService.getItem(itemId)
+                                              .asyncObject(type: [FileItem].self)
+        // Do something with fileItems
+    }
+
+    func deleteFile(itemId: String) async {
+    
+        let (_, response) = try? await FileService.deleteItem(itemId)
+                                                  .asyncDataResponse()
+        
+        if let httpResponse = response as? HTTPURLResponse,
+           httpResponse.statusCode == 204 {
+           // Delete successfully
+        }
+    }   
+}
+```
+
+
+** By using Combine **
 ```
 import TinyRequest
 import Combine
