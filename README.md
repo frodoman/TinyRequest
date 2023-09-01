@@ -74,22 +74,6 @@ TinyRequest(url: URL(string: "https://www.some-url.com")!)
     }
 ```
 
-### Getting a response from a URL 
-
-```
-TinyRequest(url: URL(string: "https://www.some-url.com")!)
-    .set(method: "GET")
-    .set(header: ["token":"xxx"])
-    .set(body: Data())
-    .responsePublisher()
-    .sink { completion in
-        // handle completion
-        
-    } receiveValue: { response in
-        // Do something...
-    }
-```
-
 ### Initialising ```TinyRequest``` with more options
 
 ```
@@ -100,7 +84,7 @@ let request = TinyRequest(request: URLRequest(url: URL(string: "xxx")!),
 
 ### For a group of API requests, please confirm to `TinyServiceProtocol`
  
-**For example, for the following API documents** 
+### For example, Let's consider the following API documents 
  
 #### API 1: Get a list of file objects from backend
 
@@ -205,7 +189,8 @@ public struct FileItem: Decodable {
 #### Then we can then use ```FileService``` in a ```ViewModel```: 
 
 
-** By using Async/Await **
+#### By using Async/Await
+
 ```
 import TinyRequest
 
@@ -232,7 +217,8 @@ class ViewModel {
 ```
 
 
-** By using Combine **
+#### By using Combine
+
 ```
 import TinyRequest
 import Combine
