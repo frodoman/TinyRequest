@@ -6,12 +6,12 @@ public extension TinyServiceProtocol {
         let url = try prepareURL()
         let request = prepareRequest(url: url)
         
-        return try await request.dataResponse()
+        return try await request.asyncDataResponse()
     }
     
     func asyncObject<T>(type: T.Type) async throws -> T where T: Decodable {
         let url = try prepareURL()
         let request = prepareRequest(url: url)
-        return try await request.objectResponse(type: T.self)
+        return try await request.asyncObject(type: T.self)
     }
 }

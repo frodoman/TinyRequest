@@ -19,7 +19,7 @@ let users = try? await TinyRequest(url: URL(string: "https://www.some-url.com")!
                             .set(method: "GET")
                             .set(header: ["token": "xxx"])
                             .set(body: Data())
-                            .objectResponse(type: UserAccount.self)
+                            .asyncObject(type: UserAccount.self)
 ```
 
 #### By using Combine
@@ -54,7 +54,7 @@ let (data, response) = try await TinyRequest(url: URL(string: "https://www.some-
                                     .set(method: "POST")
                                     .set(header: ["token":"xxx"])
                                     .set(body: Data())
-                                    .dataResponse()
+                                    .asyncDataResponse()
 ```
 
 

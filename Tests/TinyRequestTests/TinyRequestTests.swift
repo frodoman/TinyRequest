@@ -145,7 +145,7 @@ final class TinyRequestTests: XCTestCase {
         
         let people = try await TinyRequest(url: url)
                                 .set(method: "GET")
-                                .objectResponse(type: [Person].self)
+                                .asyncObject(type: [Person].self)
         
         XCTAssertTrue(people.count > 0)
         
