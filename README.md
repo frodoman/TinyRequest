@@ -99,14 +99,6 @@ let request = TinyRequest(request: URLRequest(url: URL(string: "xxx")!),
 ```
    - Response body:
 ```
-[
-  {
-    "id": "file-item-id-1",
-    "isDir": true,
-    "modificationDate": "2022-11-05 09:14 CET",
-    "name": "Documents",
-    "parentId": "file-item-id-2"
-  },
   {
     "contentType": "image/jpg",
     "id": "file-item-id-3",
@@ -116,7 +108,6 @@ let request = TinyRequest(request: URLRequest(url: URL(string: "xxx")!),
     "parentId": "file-item-id-2",
     "size": 200000
   }
-]
 ```
 
 #### API 2: Delete a file and associated object in backend
@@ -199,7 +190,7 @@ class ViewModel {
     func getFile(itemId: String) async {
     
         let fileItems = try? await FileService.getItem(itemId)
-                                              .asyncObject(type: [FileItem].self)
+                                              .asyncObject(type: FileItem.self)
         // Do something with fileItems
     }
 
