@@ -10,9 +10,7 @@ TinyRequest is a handy Swift package of doing networking request, in a declarati
 
 ## Sample codes
 
-### Getting a decodable oject from a URL
-
-#### By using Async/Await 
+### Getting a decodable oject from a URL - Async/Await
 
 ```
 let users = try? await TinyRequest(url: URL(string: "https://www.some-url.com")!)
@@ -22,7 +20,17 @@ let users = try? await TinyRequest(url: URL(string: "https://www.some-url.com")!
                             .asyncObject(type: UserAccount.self)
 ```
 
-#### By using Combine
+### Getting data from a URL - Async/Await
+
+```
+let (data, response) = try await TinyRequest(url: URL(string: "https://www.some-url.com")!)
+                                    .set(method: "POST")
+                                    .set(header: ["token":"xxx"])
+                                    .set(body: Data())
+                                    .asyncDataResponse()
+```
+
+### Getting a decodable oject from a URL - Combine
 
 ```
 TinyRequest(url: URL(string: "https://www.some-url.com")!)
@@ -45,20 +53,7 @@ struct UserAccount: Decodable {
 }
 ```
 
-### Getting data from a URL 
-
-#### By using sync/await
- 
-```
-let (data, response) = try await TinyRequest(url: URL(string: "https://www.some-url.com")!)
-                                    .set(method: "POST")
-                                    .set(header: ["token":"xxx"])
-                                    .set(body: Data())
-                                    .asyncDataResponse()
-```
-
-
-#### By using Combine
+### Getting data from a URL - Combine
 
 ```
 TinyRequest(url: URL(string: "https://www.some-url.com")!)
@@ -84,9 +79,9 @@ let request = TinyRequest(request: URLRequest(url: URL(string: "xxx")!),
 
 ### For a group of API requests, please confirm to `TinyServiceProtocol`
  
-### For example, Let's consider the following API documents 
+### Let's say we have the following API documents 
  
-#### API 1: Get a list of file objects from backend
+#### API 1: Get a file object from backend
 
 - Host: ```https://www.some-fake-cloud-file-storage.com```
 - Method: ```GET``` 
